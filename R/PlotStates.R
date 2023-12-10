@@ -26,7 +26,7 @@ PlotStates <- function(grove.obj,
                        main = NULL, 
                        prior = FALSE) {
   
-  if (class(grove.obj) != "grove")  {
+  if(!is(grove.obj, "grove"))  {
     stop("Input should be a grove class object")
   }
   

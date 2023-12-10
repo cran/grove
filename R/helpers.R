@@ -4,7 +4,7 @@
                           X) {
   # Reshape input parameters for functions Denoise and FAnova. 
 
-  if (class(W) != "DWT")  {
+  if(!is(W, "DWT")) {
     stop("W should be a DWT object.")
   }
   

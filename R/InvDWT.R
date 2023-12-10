@@ -24,7 +24,7 @@ InvDWT <- function(grove.obj,
                    include.C = TRUE, 
                    sample.C = FALSE) {
   
-  if (class(grove.obj) != "grove") {
+  if(!is(grove.obj, "grove")) {
     stop("Input should be a grove class object")
   }
   
@@ -40,7 +40,9 @@ InvDWT <- function(grove.obj,
   m <- dim(D)[2] + 1 
   
   output <- matrix(NA, ncol = m, nrow = n_samp)
-  temp <- wd(rep(1, m))
+  filter.number <- grove.obj$data$W$filter.number
+  family <- grove.obj$data$W$family
+  temp <- wd(rep(1, m), filter.number=filter.number, family=family)
   
   y <- grove.obj$data$W$C
   X <- model.matrix(grove.obj$data$formula, grove.obj$data$X)
@@ -49,14 +51,13 @@ InvDWT <- function(grove.obj,
   nu0 <- 10
   
   for (i in 1:n_samp) {
-    if ((nrow(grove.obj$data$X) == 1) && (ncol(grove.obj$data$X) == 1)) {
-      x <- 1
+    if (((nrow(grove.obj$data$X) == 1) && (ncol(grove.obj$data$X) == 1)) || dim(D)[1] == 1) {
       temp$D <- rev(D[, , i])
     } else {
       if (is.null(x)) {
         x <- c(1, rep(0, dim(D)[1] - 1))
       }
-      temp$D <- rev(t(D[, , i]) %*% x)
+      temp$D <- rev(t(D[, , i]) %*% x)  
     }
     
     if (include.C && sample.C) { 
